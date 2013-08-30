@@ -1,16 +1,16 @@
 /* jcifs smb client library in Java
  * Copyright (C) 2000  "Michael B. Allen" <jcifs at samba dot org>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -199,11 +199,11 @@ synchronized (DOMAIN) {
         return t;
     }
     // >>SmbAuthenticator
-//  boolean matches( NtlmPasswordAuthentication auth ) {
-//      return this.auth == auth || this.auth.equals( auth );
-//  }
-  // In order to support Extended Security Authentication, we need to compare
-  // authenticator to decide whether or not reuse a session.
+    //  boolean matches( NtlmPasswordAuthentication auth ) {
+    //      return this.auth == auth || this.auth.equals( auth );
+    //  }
+    // In order to support Extended Security Authentication, we need to compare
+    // authenticator to decide whether or not reuse a session.
     boolean matches(SmbExtendedAuthenticator authenticator,
           NtlmPasswordAuthentication auth) {
       return matcheObject(this.authenticator, authenticator)
@@ -211,16 +211,18 @@ synchronized (DOMAIN) {
     }
 
     private boolean matcheObject(Object obj1, Object obj2) {
-      boolean ret = false;
-      if (obj1 == null) {
-          if (obj2 == null) {
-              ret = true;
-          }
-      } else {
-          ret = obj1.equals(obj2);
-      }
-      return ret;
+        boolean ret = false;
+        if (obj1 == null) {
+            if (obj2 == null) {
+                ret = true;
+            }
+            else {
+                ret = obj1.equals(obj2);
+            }
+        }
+        return ret;
     }
+
     // SmbAuthenticator<<
     synchronized SmbTransport transport() {
         if( transport == null ) {
@@ -230,7 +232,7 @@ synchronized (DOMAIN) {
     }
     void send( ServerMessageBlock request,
                             ServerMessageBlock response ) throws SmbException {
-synchronized (transport()) {
+    synchronized (transport()) {
         if( response != null ) {
             response.received = false;
         }
@@ -296,7 +298,7 @@ synchronized (transport()) {
             /*
              * Session Setup And X Request / Response
              */
-    
+
             // >>SmbAuthenticator
 //            if( transport.log.level >= 4 )
 //                transport.log.println( "sessionSetup: accountName=" + auth.username + ",primaryDomain=" + auth.domain );
@@ -314,7 +316,7 @@ synchronized (transport()) {
              * "The parameter is incorrect" error can occur.
              */
             uid = 0;
-    
+
             // >>SmbAuthenticator
             if (authenticator != null) {
                 authenticator.sessionSetup(this, andx, andxResponse);
@@ -329,10 +331,10 @@ synchronized (transport()) {
 	                            state = 20; /* NTLMSSP */
 	                            break;
 	                        }
-	    
+
 	                        request = new SmbComSessionSetupAndX( this, andx, auth );
 	                        response = new SmbComSessionSetupAndXResponse( andxResponse );
-	    
+
 	                        /* Create SMB signature digest if necessary
 	                         * Only the first SMB_COM_SESSION_SETUP_ANX with non-null or
 	                         * blank password initializes signing.
@@ -347,9 +349,9 @@ synchronized (transport()) {
 	                                request.digest = new SigningDigest(signingKey, false);
 	                            }
 	                        }
-	    
+
 	                        request.auth = auth;
-	    
+
 	                        try {
 	                            transport.send( request, response );
 	                        } catch (SmbAuthException sae) {
@@ -357,48 +359,48 @@ synchronized (transport()) {
 	                        } catch (SmbException se) {
 	                            ex = se;
 	                        }
-	    
+
 	                        if( response.isLoggedInAsGuest &&
 	                                    "GUEST".equalsIgnoreCase( auth.username ) == false &&
 	                                    transport.server.security != SmbConstants.SECURITY_SHARE &&
 	                                    auth != NtlmPasswordAuthentication.ANONYMOUS) {
 	                            throw new SmbAuthException( NtStatus.NT_STATUS_LOGON_FAILURE );
 	                        }
-	    
+
 	                        if (ex != null)
 	                            throw ex;
-	    
+
 	                        uid = response.uid;
-	    
+
 	                        if( request.digest != null ) {
 	                            /* success - install the signing digest */
 	                            transport.digest = request.digest;
 	                        }
-	    
-	                        connectionState = 2;    
-	
+
+	                        connectionState = 2;
+
 	                        state = 0;
-	    
+
 	                        break;
 	                    case 20:
 	                        if (nctx == null) {
 	                            boolean doSigning = (transport.flags2 & ServerMessageBlock.FLAGS2_SECURITY_SIGNATURES) != 0;
 	                            nctx = new NtlmContext(auth, doSigning);
 	                        }
-	    
+
 	                        if (SmbTransport.log.level >= 4)
 	                            SmbTransport.log.println(nctx);
-	    
+
 	                        if (nctx.isEstablished()) {
-	
+
 	                            netbiosName = nctx.getNetbiosName();
-	
+
 	                            connectionState = 2;
-	
+
 	                            state = 0;
 	                            break;
 	                        }
-	    
+
 	                        try {
 	                            token = nctx.initSecContext(token, 0, token.length);
 	                        } catch (SmbException se) {
@@ -410,20 +412,20 @@ synchronized (transport()) {
 	                            uid = 0;
 	                            throw se;
 	                        }
-	    
+
 	                        if (token != null) {
 	                            request = new SmbComSessionSetupAndX(this, null, token);
 	                            response = new SmbComSessionSetupAndXResponse(null);
-	    
+
 	                            if (transport.isSignatureSetupRequired( auth )) {
 	                                byte[] signingKey = nctx.getSigningKey();
 	                                if (signingKey != null)
 	                                    request.digest = new SigningDigest(signingKey, true);
 	                            }
-	    
+
 	                            request.uid = uid;
 	                            uid = 0;
-	    
+
 	                            try {
 	                                transport.send( request, response );
 	                            } catch (SmbAuthException sae) {
@@ -438,25 +440,25 @@ synchronized (transport()) {
 	                                 */
 	                                try { transport.disconnect(true); } catch (Exception e) {}
 	                            }
-	    
+
 	                            if( response.isLoggedInAsGuest &&
 	                                        "GUEST".equalsIgnoreCase( auth.username ) == false) {
 	                                throw new SmbAuthException( NtStatus.NT_STATUS_LOGON_FAILURE );
 	                            }
-	    
+
 	                            if (ex != null)
 	                                throw ex;
-	    
+
 	                            uid = response.uid;
-	    
+
 	                            if (request.digest != null) {
 	                                /* success - install the signing digest */
 	                                transport.digest = request.digest;
 	                            }
-	    
+
 	                            token = response.blob;
 	                        }
-	    
+
 	                        break;
 	                    default:
 	                        throw new SmbException("Unexpected session setup state: " + state);
@@ -528,7 +530,7 @@ synchronized (transport()) {
 
     void setSessionSetup(boolean b) {
     	if (b){
-        	connectionState = 2; 
+        	connectionState = 2;
     	}
     }
     // >>SmbAuthenticator

@@ -1,17 +1,17 @@
 /* jcifs smb client library in Java
  * Copyright (C) 2000  "Michael B. Allen" <jcifs at samba dot org>
  *                     "Paul Walker" <jcifs at samba dot org>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -132,18 +132,34 @@ public class SmbNamedPipe extends SmbFile {
     public SmbNamedPipe( String url, int pipeType )
                             throws MalformedURLException, UnknownHostException {
         super( url );
-        this.pipeType = pipeType;
-        type = TYPE_NAMED_PIPE;
+        init( pipeType );
     }
+
     public SmbNamedPipe( String url, int pipeType, NtlmPasswordAuthentication auth )
                             throws MalformedURLException, UnknownHostException {
-        super( url, auth );
-        this.pipeType = pipeType;
-        type = TYPE_NAMED_PIPE;
+        super( url, auth);
+        init( pipeType );
     }
+
+    public SmbNamedPipe( String url, int pipeType, SmbExtendedAuthenticator auth )
+                            throws MalformedURLException, UnknownHostException {
+        super( url, auth);
+        init( pipeType );
+    }
+
     public SmbNamedPipe( URL url, int pipeType, NtlmPasswordAuthentication auth )
                             throws MalformedURLException, UnknownHostException {
         super( url, auth );
+        init( pipeType );
+    }
+
+    public SmbNamedPipe( URL url, int pipeType, SmbExtendedAuthenticator auth )
+                            throws MalformedURLException, UnknownHostException {
+        super( url, auth );
+        init( pipeType );
+    }
+
+    private void init(int pipeType) {
         this.pipeType = pipeType;
         type = TYPE_NAMED_PIPE;
     }

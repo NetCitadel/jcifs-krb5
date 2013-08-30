@@ -1,17 +1,17 @@
 /* jcifs msrpc client library in Java
  * Copyright (C) 2006  "Michael B. Allen" <jcifs at samba dot org>
  *                     "Eric Glass" <jcifs at samba dot org>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -28,13 +28,27 @@ import jcifs.util.*;
 
 public class DcerpcPipeHandle extends DcerpcHandle {
 
+                /* This 0x20000 bit is going to get chopped! */
+    final static int pipeFlags = (0x2019F << 16) | SmbNamedPipe.PIPE_TYPE_RDWR | SmbNamedPipe.PIPE_TYPE_DCE_TRANSACT;
+
     SmbNamedPipe pipe;
     SmbFileInputStream in = null;
     SmbFileOutputStream out = null;
     boolean isStart = true;
 
-    public DcerpcPipeHandle(String url,
-                NtlmPasswordAuthentication auth)
+    public DcerpcPipeHandle(String url, NtlmPasswordAuthentication auth)
+                throws UnknownHostException, MalformedURLException, DcerpcException {
+        url = init(url);
+        pipe = new SmbNamedPipe(url, pipeFlags, auth);
+    }
+
+    public DcerpcPipeHandle(String url, SmbExtendedAuthenticator auth)
+                throws UnknownHostException, MalformedURLException, DcerpcException {
+        url = init(url);
+        pipe = new SmbNamedPipe(url, pipeFlags, auth);
+    }
+
+    private String init(String url)
                 throws UnknownHostException, MalformedURLException, DcerpcException {
         binding = DcerpcHandle.parseBinding(url);
         url = "smb://" + binding.server + "/IPC$/" + binding.endpoint.substring(6);
@@ -49,10 +63,7 @@ public class DcerpcPipeHandle extends DcerpcHandle {
         if (params.length() > 0)
             url += "?" + params.substring(1);
 
-        pipe = new SmbNamedPipe(url,
-                /* This 0x20000 bit is going to get chopped! */
-                (0x2019F << 16) | SmbNamedPipe.PIPE_TYPE_RDWR | SmbNamedPipe.PIPE_TYPE_DCE_TRANSACT,
-                auth);
+        return url;
     }
 
     protected void doSendFragment(byte[] buf,
