@@ -211,16 +211,15 @@ synchronized (DOMAIN) {
     }
 
     private boolean matcheObject(Object obj1, Object obj2) {
-        boolean ret = false;
-        if (obj1 == null) {
-            if (obj2 == null) {
-                ret = true;
-            }
-            else {
-                ret = obj1.equals(obj2);
-            }
-        }
-        return ret;
+      boolean ret = false;
+      if (obj1 == null) {
+          if (obj2 == null) {
+              ret = true;
+          }
+      } else {
+          ret = obj1.equals(obj2);
+      }
+      return ret;
     }
 
     // SmbAuthenticator<<
