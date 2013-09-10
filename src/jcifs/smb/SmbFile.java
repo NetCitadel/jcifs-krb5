@@ -1,16 +1,16 @@
 /* jcifs smb client library in Java
  * Copyright (C) 2000  "Michael B. Allen" <jcifs at samba dot org>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -91,31 +91,31 @@ import java.util.Date;
  *
  * <p>[1] This URL scheme is based largely on the <i>SMB
  * Filesharing URL Scheme</i> IETF draft.
- * 
+ *
  * <p><table border="1" cellpadding="3" cellspacing="0" width="100%">
  * <tr bgcolor="#ccccff">
  * <td colspan="2"><b>SMB URL Examples</b></td>
  * <tr><td width="20%"><b>URL</b></td><td><b>Description</b></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://users-nyc;miallen:mypass@angus/tmp/</code></td><td>
  * This URL references a share called <code>tmp</code> on the server
  * <code>angus</code> as user <code>miallen</code> who's password is
  * <code>mypass</code>.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%">
  * <code>smb://Administrator:P%40ss@msmith1/c/WINDOWS/Desktop/foo.txt</code></td><td>
  * A relativly sophisticated example that references a file
  * <code>msmith1</code>'s desktop as user <code>Administrator</code>. Notice the '@' is URL encoded with the '%40' hexcode escape.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://angus/</code></td><td>
  * This references only a server. The behavior of some methods is different
  * in this context(e.g. you cannot <code>delete</code> a server) however
  * as you might expect the <code>list</code> method will list the available
  * shares on this server.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://myworkgroup/</code></td><td>
  * This syntactically is identical to the above example. However if
  * <code>myworkgroup</code> happends to be a workgroup(which is indeed
@@ -123,7 +123,7 @@ import java.util.Date;
  * a list of servers that have registered themselves as members of
  * <code>myworkgroup</code>.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://</code></td><td>
  * Just as <code>smb://server/</code> lists shares and
  * <code>smb://workgroup/</code> lists servers, the <code>smb://</code>
@@ -131,24 +131,24 @@ import java.util.Date;
  * in this context many methods are not valid and return default
  * values(e.g. <code>isHidden</code> will always return false).
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://angus.foo.net/d/jcifs/pipes.doc</code></td><td>
  * The server name may also be a DNS name as it is in this example. See
  * <a href="../../../resolver.html">Setting Name Resolution Properties</a>
  * for details.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://192.168.1.15/ADMIN$/</code></td><td>
  * The server name may also be an IP address. See <a
  * href="../../../resolver.html">Setting Name Resolution Properties</a>
  * for details.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%">
  * <code>smb://domain;username:password@server/share/path/to/file.txt</code></td><td>
  * A prototypical example that uses all the fields.
  * </td></tr>
- * 
+ *
  * <tr><td width="20%"><code>smb://myworkgroup/angus/ &lt;-- ILLEGAL </code></td><td>
  * Despite the hierarchial relationship between workgroups, servers, and
  * filesystems this example is not valid.
@@ -169,7 +169,7 @@ import java.util.Date;
  * </td></tr>
  *
  * </table>
- * 
+ *
  * <p>A second constructor argument may be specified to augment the URL
  * for better programmatic control when processing many files under
  * a common base. This is slightly different from the corresponding
@@ -192,7 +192,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://host/share/a/b/c/d/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://host/share/foo/bar/
  * </code></td><td width="20%"><code>
@@ -200,7 +200,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://host/share2/zig/zag
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://host/share/foo/bar/
  * </code></td><td width="20%"><code>
@@ -208,7 +208,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://host/share/foo/zip/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://host/share/zig/zag
  * </code></td><td width="20%"><code>
@@ -216,7 +216,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://foo/bar/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://host/share/foo/
  * </code></td><td width="20%"><code>
@@ -224,7 +224,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://host/foo/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://host/share/zig/zag
  * </code></td><td width="20%"><code>
@@ -232,7 +232,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://host/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://server/
  * </code></td><td width="20%"><code>
@@ -240,7 +240,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://server/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://
  * </code></td><td width="20%"><code>
@@ -248,7 +248,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://myworkgroup/
  * </code></td></tr>
- * 
+ *
  * <tr><td width="20%"><code>
  *  smb://myworkgroup/
  * </code></td><td width="20%"><code>
@@ -256,7 +256,7 @@ import java.util.Date;
  * </code></td><td><code>
  *  smb://myworkgroup/angus/ &lt;-- ILLEGAL<br>(But if you first create an <tt>SmbFile</tt> with 'smb://workgroup/' and use and use it as the first parameter to a constructor that accepts it with a second <tt>String</tt> parameter jCIFS will factor out the 'workgroup'.)
  * </code></td></tr>
- * 
+ *
  * </table>
  *
  * <p>Instances of the <code>SmbFile</code> class are immutable; that is,
@@ -312,12 +312,12 @@ public class SmbFile extends URLConnection implements SmbConstants {
     public static final int FILE_SHARE_DELETE = 0x04;
 
     // file attribute encoding
-/** 
+/**
  * A file with this bit on as returned by <tt>getAttributes()</tt> or set
  * with <tt>setAttributes()</tt> will be read-only
- */ 
+ */
     public static final int ATTR_READONLY   = 0x01;
-/** 
+/**
  * A file with this bit on as returned by <tt>getAttributes()</tt> or set
  * with <tt>setAttributes()</tt> will be hidden
  */
@@ -432,7 +432,7 @@ public class SmbFile extends URLConnection implements SmbConstants {
     boolean opened;
     int tree_num;
 
-/** 
+/**
  * Constructs an SmbFile representing a resource on an SMB network such as
  * a file or directory. See the description and examples of smb URLs above.
  *
@@ -976,7 +976,7 @@ int addressIndex;
             } catch(SmbAuthException sae) {
                 throw sae; // Prevents account lockout on servers with multiple IPs
             } catch(SmbException se) {
-                if (getNextAddress() == null) 
+                if (getNextAddress() == null)
                     throw se;
                 if (log.level >= 3)
                     se.printStackTrace(log);
@@ -1270,15 +1270,15 @@ if (this instanceof SmbNamedPipe) {
         }
         return getServer();
     }
-/** 
+/**
  * Retrieve the hostname of the server for this SMB resource. If this
  * <code>SmbFile</code> references a workgroup, the name of the workgroup
  * is returned. If this <code>SmbFile</code> refers to the root of this
  * SMB network hierarchy, <code>null</code> is returned.
- * 
+ *
  * @return  The server or workgroup name or <code>null</code> if this
  *          <code>SmbFile</code> refers to the root <code>smb://</code> resource.
- */ 
+ */
 
     public String getServer() {
         String str = url.getHost();
@@ -2240,14 +2240,14 @@ if (this instanceof SmbNamedPipe) {
                         throw sae;
                     }
                 }
-    
+
                 i = 0;
                 off = 0L;
                 for( ;; ) {
                     req.setParam( fid, off, bsize );
                     resp.setParam( b[i], 0 );
                     send( req, resp );
-    
+
                     synchronized( w ) {
                         if( w.e != null ) {
                             throw w.e;
@@ -2267,11 +2267,11 @@ if (this instanceof SmbNamedPipe) {
                         }
                         w.write( b[i], resp.dataLength, dest, off );
                     }
-    
+
                     i = i == 1 ? 0 : 1;
                     off += resp.dataLength;
                 }
-    
+
                 dest.send( new Trans2SetFileInformation(
                         dest.fid, attributes, createTime, lastModified ),
                         new Trans2SetFileInformationResponse() );
@@ -2568,7 +2568,9 @@ if (this instanceof SmbNamedPipe) {
         SmbFile parent;
 
         try {
-            parent = new SmbFile( getParent(), auth );
+                parent = (authenticator != null)?
+                    new SmbFile( getParent(), authenticator ):
+                    new SmbFile( getParent(), auth );
         } catch( IOException ioe ) {
             return;
         }
@@ -3004,7 +3006,7 @@ if (this instanceof SmbNamedPipe) {
      * Instance a SmbFile object with Extended Security Authentication by
      * providing specified SmbAuthenticator. The authentication information in
      * URL will be ignored.
-     * 
+     *
      * @param url
      * @param authenticator
      * @param shareAccess
@@ -3020,7 +3022,7 @@ if (this instanceof SmbNamedPipe) {
      * Instance a SmbFile object with Extended Security Authentication by
      * providing specified SmbAuthenticator. The authentication information in
      * URL will be ignored.
-     * 
+     *
      * @param url
      * @param authenticator
      * @throws MalformedURLException
@@ -3035,7 +3037,7 @@ if (this instanceof SmbNamedPipe) {
      * Instance a SmbFile object with Extended Security Authentication by
      * providing specified SmbAuthenticator. The authentication information in
      * URL will be ignored.
-     * 
+     *
      * @param url
      * @param authenticator
      */
