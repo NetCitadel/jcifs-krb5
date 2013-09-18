@@ -1,5 +1,6 @@
 package jcifs.smb;
 
+import java.net.InetAddress;
 import java.security.Key;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -182,8 +183,9 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
         try{
             String host = session.transport.address.getHostAddress();
             try{
-                host = session.transport.address.getHostName();
-            }catch(Throwable e){}
+                // We need FQDN here
+                host = InetAddress.getByName(host).getCanonicalHostName();
+            }catch(Exception e){}
             context = createContext(host);
             spnego = new SpnegoContext(context.getGSSContext());
 
