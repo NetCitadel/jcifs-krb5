@@ -15,10 +15,6 @@ import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 
 import jcifs.Config;
-import jcifs.smb.ServerMessageBlock;
-import jcifs.smb.Kerb5SessionSetupAndX;
-import jcifs.smb.SmbException;
-import jcifs.smb.SmbSession;
 
 // >>SmbAuthenticator
 /**
@@ -185,6 +181,7 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
             try{
                 // We need FQDN here
                 host = InetAddress.getByName(host).getCanonicalHostName();
+                //host = session.transport.address.getHostName();
             }catch(Exception e){}
             context = createContext(host);
             spnego = new SpnegoContext(context.getGSSContext());
@@ -207,8 +204,8 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
                                 (session.transport.server.signaturesRequired ||
                                         (session.transport.server.signaturesEnabled && SmbConstants.SIGNPREF))){
                         Key key = context.searchSessionKey(subject);
-                        if(key == null){
-                            throw new SmbException("Not found the session key.");
+                        if(key == null) {
+                            throw new SmbAuthException("Kerberos session key not found.");
                         }
                         request.digest = new SigningDigest(key.getEncoded());
                     }
@@ -223,8 +220,7 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
             session.setSessionSetup(true);
 
         }catch (GSSException e) {
-            e.printStackTrace();
-            throw new SmbException(e.getMessage());
+            throw new SmbAuthException("Kerberos session setup has failed.", e);
         }finally{
             if(context != null){
                 try {context.dispose();} catch (GSSException e) {}
