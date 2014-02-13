@@ -179,9 +179,9 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
         try{
             String host = session.transport.address.getHostAddress();
             try{
-                // We need FQDN here
-                host = InetAddress.getByName(host).getCanonicalHostName();
-                //host = session.transport.address.getHostName();
+                // Java 1.6 under Mac requires FQDN here
+                // host = InetAddress.getByName(host).getCanonicalHostName();
+                host = session.transport.address.getHostName();
             }catch(Exception e){}
             context = createContext(host);
             spnego = new SpnegoContext(context.getGSSContext());
