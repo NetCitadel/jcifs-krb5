@@ -57,6 +57,7 @@ public interface NtStatus {
     public static final int NT_STATUS_ACCOUNT_DISABLED = 0xC0000072;
     public static final int NT_STATUS_NONE_MAPPED = 0xC0000073;
     public static final int NT_STATUS_INVALID_SID = 0xC0000078;
+    public static final int NT_STATUS_DISK_FULL = 0xC000007f;
     public static final int NT_STATUS_INSTANCE_NOT_AVAILABLE = 0xC00000ab;
     public static final int NT_STATUS_PIPE_NOT_AVAILABLE = 0xC00000ac;
     public static final int NT_STATUS_INVALID_PIPE_STATE = 0xC00000ad;
@@ -122,6 +123,7 @@ public interface NtStatus {
         NT_STATUS_ACCOUNT_DISABLED,
         NT_STATUS_NONE_MAPPED,
         NT_STATUS_INVALID_SID,
+        NT_STATUS_DISK_FULL,
         NT_STATUS_INSTANCE_NOT_AVAILABLE,
         NT_STATUS_PIPE_NOT_AVAILABLE,
         NT_STATUS_INVALID_PIPE_STATE,
@@ -188,6 +190,7 @@ public interface NtStatus {
         "Logon failure: account currently disabled.",
         "No mapping between account names and security IDs was done.",
         "The security ID structure is invalid.",
+        "The file system is full.",
         "All pipe instances are busy.",
         "All pipe instances are busy.",
         "The pipe state is invalid.",
