@@ -2577,7 +2577,16 @@ if (this instanceof SmbNamedPipe) {
         if( parent.exists() == false ) {
             parent.mkdirs();
         }
-        mkdir();
+        try {
+            mkdir();
+        }
+        catch(SmbException e) {
+            // Ignore "Cannot create a file when that file already exists." errors for now as
+            // they seem to be show up under some cinditions most likely due to timing issues.
+            if (e.getNtStatus() != NtStatus.NT_STATUS_OBJECT_NAME_COLLISION) {
+                throw e;
+            }
+        }
     }
 
 /**
