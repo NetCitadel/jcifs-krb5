@@ -59,6 +59,7 @@ public class rpc {
         public void encode(NdrBuffer _dst) throws NdrException {
             _dst.align(4);
             _dst.enc_ndr_long(type);
+            if (uuid == null) throw new NdrException( NdrException.NO_NULL_REF );
             _dst.enc_ndr_long(uuid.time_low);
             _dst.enc_ndr_short(uuid.time_mid);
             _dst.enc_ndr_short(uuid.time_hi_and_version);
